@@ -21,6 +21,7 @@ const router = createRouter({
         { path: 'apartamentos',  name: 'apartamentos',  component: () => import('@/views/ApartamentosView.vue') },
         { path: 'moradores',     name: 'moradores',     component: () => import('@/views/MoradoresView.vue') },
         { path: 'descartes',     name: 'descartes',     component: () => import('@/views/DescartesView.vue') },
+        { path: 'recompensas',   name: 'recompensas',   component: () => import('@/views/RecompensasView.vue') },
         { path: 'ecopoints',     name: 'ecopoints',     component: () => import('@/views/EcopointsView.vue') },
         { path: 'criar-apartamento', name: 'criar-apartamento', component: () => import('@/views/CriarApartamentoView.vue') },
       ]
