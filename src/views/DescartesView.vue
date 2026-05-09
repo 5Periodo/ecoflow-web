@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div>
     <div class="page-header">
       <div>
@@ -60,10 +60,15 @@
           </div>
 
           <div class="modal-body">
-            <div v-if="selected.fotoUrl" class="foto-box">
-              <img :src="selected.fotoUrl" alt="Foto do descarte" class="foto" />
+            <div v-if="selected.fotoUrls && selected.fotoUrls.length > 0" class="foto-carousel">
+              <button class="carousel-btn prev" @click.prevent="prevFoto" v-if="selected.fotoUrls.length > 1">‹</button>
+              <img :src="selected.fotoUrls[fotoIndex]" alt="Foto do descarte" class="foto" />
+              <div class="carousel-indicators" v-if="selected.fotoUrls.length > 1">
+                <span v-for="(f, i) in selected.fotoUrls" :key="i" class="indicator" :class="{ active: i === fotoIndex }"></span>
+              </div>
+              <button class="carousel-btn next" @click.prevent="nextFoto" v-if="selected.fotoUrls.length > 1">›</button>
             </div>
-            <div v-else class="foto-placeholder">📷 Sem foto enviada</div>
+            <div v-else class="foto-placeholder">📷 Sem fotos enviadas</div>
 
             <div class="info-grid">
               <div class="info-item">
@@ -124,6 +129,7 @@ const error = ref('')
 const descartes = ref<any[]>([])
 const filtroStatus = ref('PENDENTE')
 const selected = ref<any>(null)
+const fotoIndex = ref(0)
 const pontosCustom = ref<number | null>(null)
 const aprovLoading = ref(false)
 const aprovError = ref('')
@@ -147,8 +153,20 @@ const filtrados = computed(() => filtroStatus.value ? descartes.value.filter(d =
 function abrir(d: any) {
   if (d.status !== 'PENDENTE') return
   selected.value = d
+  fotoIndex.value = 0
   pontosCustom.value = null
   aprovError.value = ''
+}
+
+function prevFoto() {
+  if (selected.value?.fotoUrls?.length) {
+    fotoIndex.value = (fotoIndex.value - 1 + selected.value.fotoUrls.length) % selected.value.fotoUrls.length
+  }
+}
+function nextFoto() {
+  if (selected.value?.fotoUrls?.length) {
+    fotoIndex.value = (fotoIndex.value + 1) % selected.value.fotoUrls.length
+  }
 }
 
 async function aprovar(status: 'APROVADO' | 'NEGADO') {
@@ -245,12 +263,34 @@ onMounted(async () => {
 .modal-header h2 { font-size: 18px; font-weight: 600; color: var(--color-white); }
 .btn-close { background: none; color: var(--color-emerald-100); font-size: 18px; }
 .modal-body { padding: 20px 24px; }
-.foto-box { margin-bottom: 16px; border-radius: var(--radius-md); overflow: hidden; }
-.foto { width: 100%; max-height: 280px; object-fit: cover; }
+.foto-carousel {
+  position: relative; margin-bottom: 16px; border-radius: var(--radius-md); overflow: hidden;
+  background: var(--color-bg); display: flex; align-items: center; justify-content: center; height: 280px;
+}
+.foto { max-width: 100%; max-height: 100%; object-fit: contain; }
+.carousel-btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(0,0,0,0.5); color: white; border: none; font-size: 24px;
+  width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.2s;
+}
+.carousel-btn:hover { background: rgba(0,0,0,0.8); }
+.carousel-btn.prev { left: 8px; }
+.carousel-btn.next { right: 8px; }
+.carousel-indicators {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px;
+}
+.indicator {
+  width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4);
+}
+.indicator.active { background: white; }
+
 .foto-placeholder {
   background: var(--color-bg); border: 1px dashed var(--color-surface-2);
   border-radius: var(--radius-md); padding: 32px; text-align: center;
-  color: var(--color-emerald-100); font-size: 14px; margin-bottom: 16px;
+  color: var(--color-emerald-100); font-size: 14px; margin-bottom: 16px; height: 280px;
+  display: flex; align-items: center; justify-content: center;
 }
 .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .info-item { display: flex; flex-direction: column; gap: 2px; }
