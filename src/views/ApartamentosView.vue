@@ -1,14 +1,17 @@
 <template>
   <div>
     <div class="page-header">
-      <h1 class="page-title">Gestão de Apartamentos</h1>
-      <div class="page-badge text-muted">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-        {{ apartamentos.length }} unidades
+      <div class="title-group">
+        <h1 class="page-title">Gestão de Apartamentos</h1>
+        <div class="page-badge text-muted">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          {{ apartamentos.length }} unidades
+        </div>
       </div>
+      <router-link to="/criar-apartamento" class="btn-novo">+ Novo Apartamento</router-link>
     </div>
 
     <div v-if="loading" class="loading">Carregando apartamentos...</div>
@@ -118,6 +121,7 @@ onMounted(async () => {
   align-items: center;
   margin-bottom: 24px;
 }
+.title-group { display: flex; align-items: center; gap: 16px; }
 .page-title { font-size: 24px; font-weight: 600; color: var(--color-white); }
 .page-badge {
   display: flex;
@@ -125,6 +129,11 @@ onMounted(async () => {
   gap: 6px;
   font-size: 14px;
 }
+.btn-novo {
+  background: var(--color-lime); color: #0a1a0a;
+  padding: 10px 20px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600;
+}
+.btn-novo:hover { opacity: 0.9; }
 
 .loading, .error-state { text-align: center; padding: 60px 0; color: var(--color-emerald-100); }
 .error-state { color: var(--color-amber); }

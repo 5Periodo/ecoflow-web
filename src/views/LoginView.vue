@@ -3,7 +3,7 @@
     <div class="login-card">
       <!-- Logo -->
       <div class="logo">
-        <span class="logo-eco">Eco</span><span class="logo-flow">Flow</span>
+        <img src="@/assets/logo.png" alt="EcoFlow" class="logo-img" />
       </div>
       <h1 class="login-title">Painel do Síndico</h1>
       <p class="login-sub">Entre com sua conta para acessar o painel de gestão</p>
@@ -96,13 +96,15 @@ async function handleLogin() {
 }
 
 .logo {
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: -1px;
   margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
 }
-.logo-eco  { color: var(--color-lime); }
-.logo-flow { color: var(--color-white); }
+.logo-img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
 
 .login-title {
   font-size: 22px;
