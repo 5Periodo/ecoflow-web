@@ -1,42 +1,89 @@
-# ecoflow-web
+# EcoFlow Web - Painel Administrativo
 
-This template should help get you started developing with Vue 3 in Vite.
+Painel de controle para síndicos e administradores do sistema EcoFlow.
 
-## Recommended IDE Setup
+## 📝 Descrição
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+O **EcoFlow Web** é a interface administrativa onde o síndico gerencia todo o ecossistema de sustentabilidade do condomínio. Através deste painel, é possível acompanhar métricas de descarte, validar registros de moradores, gerenciar o catálogo de recompensas e visualizar o ranking de engajamento.
 
-## Recommended Browser Setup
+---
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## 🚀 Tecnologias
 
-## Type Support for `.vue` Imports in TS
+- **Framework:** [Vue 3](https://vuejs.org/)
+- **Build Tool:** [Vite](https://vitejs.dev/)
+- **Linguagem:** TypeScript
+- **Estilização:** CSS Vanilla / Tailwind (conforme aplicável)
+- **Gráficos:** [Chart.js](https://www.chartjs.org/) com [vue-chartjs](https://vue-chartjs.org/)
+- **Ícones:** [Lucide Vue](https://lucide.dev/guide/packages/lucide-vue-next)
+- **Consumo de API:** [Axios](https://axios-http.com/)
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+---
 
-## Customize configuration
+## 🛠️ Funcionalidades
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+### 📈 Dashboard de Métricas
+- Visualização de total de resíduos coletados (kg).
+- Gráficos de evolução mensal e comparativo de metas.
+- Status de engajamento global do condomínio.
 
-## Project Setup
+### 👥 Gestão de Moradores e Unidades
+- Cadastro e listagem de moradores.
+- Visualização de pontuação e nível de cada residente.
+- Filtros por bloco e número do apartamento.
 
-```sh
+### ♻️ Controle de Descartes
+- Lista de descartes pendentes de aprovação.
+- Visualização de fotos enviadas pelos moradores para conferência.
+- Ferramenta para aprovar/negar descartes e atribuir pontos.
+
+### 🎁 Centro de Recompensas
+- Gestão completa do catálogo de prêmios.
+- Controle de estoque e validade de benefícios.
+- Validação de cupons resgatados pelos moradores.
+
+---
+
+## ⚙️ Configuração
+
+### Pré-requisitos
+- Node.js (v20+)
+
+### Instalação
+1. Clone o repositório
+2. Instale as dependências:
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+3. Configure as variáveis de ambiente em um arquivo `.env`:
+```env
+VITE_API_URL="http://localhost:3000/api"
+```
 
-```sh
+### Execução
+```bash
+# Servidor de desenvolvimento
 npm run dev
-```
 
-### Type-Check, Compile and Minify for Production
-
-```sh
+# Build para produção
 npm run build
+
+# Visualizar build localmente
+npm run preview
 ```
+
+---
+
+## 📂 Estrutura de Pastas
+
+- `src/views`: Páginas principais da aplicação.
+- `src/components`: Componentes reutilizáveis.
+- `src/services`: Camada de comunicação com a API.
+- `src/assets`: Arquivos estáticos (imagens, estilos globais).
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença [MIT](LICENSE).
