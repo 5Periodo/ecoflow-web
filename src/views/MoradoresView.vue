@@ -38,7 +38,7 @@
                     :src="'/assets/niveis/' + m.nivel?.icone + '.png'"
                     alt=""
                     class="nivel-icon"
-                    @error="(event) => { if (event.currentTarget instanceof HTMLImageElement) event.currentTarget.style.display = 'none' }"
+                    @error="handleImageError"
                   />
                   {{ m.nivel?.nome }}
                 </div>
@@ -146,6 +146,13 @@ onMounted(carregar)
 
 function onMoradorCreated() {
   carregar() // Recarrega a lista
+}
+
+function handleImageError(event: Event) {
+  const image = event.currentTarget as HTMLImageElement | null
+  if (image) {
+    image.style.display = 'none'
+  }
 }
 
 function abrirEditar(m: any) {
