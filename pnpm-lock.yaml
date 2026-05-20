@@ -60,9 +60,6 @@ importers:
       vite:
         specifier: ^8.0.8
         version: 8.0.13(@types/node@24.12.4)(yaml@2.9.0)
-      vite-plugin-vue-devtools:
-        specifier: ^8.1.1
-        version: 8.1.2(vite@8.0.13(@types/node@24.12.4)(yaml@2.9.0))(vue@3.5.34(typescript@6.0.3))
       vue-tsc:
         specifier: ^3.2.6
         version: 3.3.1(typescript@6.0.3)
