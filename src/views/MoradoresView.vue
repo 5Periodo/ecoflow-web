@@ -34,7 +34,12 @@
               <td><span class="badge text-lime border-lime">Apto {{ m.apartamento?.numero }}{{ m.apartamento?.bloco ? ' / ' + m.apartamento.bloco : '' }}</span></td>
               <td>
                 <div class="nivel-badge">
-                  <img :src="'/assets/niveis/' + m.nivel?.icone + '.png'" alt="" class="nivel-icon" @error="$event.target.style.display='none'" />
+                  <img
+                    :src="'/assets/niveis/' + m.nivel?.icone + '.png'"
+                    alt=""
+                    class="nivel-icon"
+                    @error="(event) => { if (event.currentTarget instanceof HTMLImageElement) event.currentTarget.style.display = 'none' }"
+                  />
                   {{ m.nivel?.nome }}
                 </div>
               </td>
