@@ -34,7 +34,12 @@
               <td><span class="badge text-lime border-lime">Apto {{ m.apartamento?.numero }}{{ m.apartamento?.bloco ? ' / ' + m.apartamento.bloco : '' }}</span></td>
               <td>
                 <div class="nivel-badge">
-                  <img :src="'/assets/niveis/' + m.nivel?.icone + '.png'" alt="" class="nivel-icon" @error="$event.target.style.display='none'" />
+                  <img
+                    :src="'/assets/niveis/' + m.nivel?.icone + '.png'"
+                    alt=""
+                    class="nivel-icon"
+                    @error="handleImageError"
+                  />
                   {{ m.nivel?.nome }}
                 </div>
               </td>
@@ -141,6 +146,13 @@ onMounted(carregar)
 
 function onMoradorCreated() {
   carregar() // Recarrega a lista
+}
+
+function handleImageError(event: Event) {
+  const image = event.currentTarget as HTMLImageElement | null
+  if (image) {
+    image.style.display = 'none'
+  }
 }
 
 function abrirEditar(m: any) {
