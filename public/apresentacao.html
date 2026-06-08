@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoFlow – Apresentação do Projeto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #0b1120;
+      --bg2:       #111827;
+      --surface:   #1a2235;
+      --border:    #1e3a5f;
+      --green:     #22c55e;
+      --green-dim: #16a34a;
+      --teal:      #0ea5e9;
+      --teal-dim:  #0284c7;
+      --purple:    #a855f7;
+      --amber:     #f59e0b;
+      --red:       #ef4444;
+      --text:      #f1f5f9;
+      --muted:     #94a3b8;
+      --card-bg:   rgba(26,34,53,0.85);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    code { font-family: 'JetBrains Mono', monospace; }
+
+    /* ===== SLIDE CONTAINER ===== */
+    #slides-wrapper {
+      display: flex;
+      transition: transform 0.65s cubic-bezier(0.77, 0, 0.18, 1);
+      height: 100vh;
+      width: 100vw;
+    }
+    .slide {
+      min-width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 60px;
+      position: relative;
+    }
+
+    /* ===== NOISE TEXTURE ===== */
+    .slide::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+    .slide > * { position: relative; z-index: 1; }
+
+    /* ===== GLOW ORBS ===== */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===== NAV ===== */
+    #nav {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(17,24,39,0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(30,58,95,0.6);
+      border-radius: 50px;
+      padding: 10px 20px;
+      z-index: 100;
+    }
+    .nav-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { background: rgba(34,197,94,0.1); color: var(--green); }
+    #slide-counter {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+      min-width: 60px;
+      text-align: center;
+    }
+    .dot-nav { display: flex; gap: 6px; }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .dot.active { background: var(--green); width: 20px; border-radius: 3px; }
+
+    /* ===== SLIDE LABEL ===== */
+    .slide-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slide-label::before {
+      content: '';
+      width: 24px; height: 2px;
+      background: var(--green);
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    h1.hero-title {
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -2px;
+    }
+    h2.section-title {
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-purple {
+      background: linear-gradient(135deg, var(--purple) 0%, var(--teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid rgba(30,58,95,0.5);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .card-sm { padding: 16px 20px; border-radius: 12px; }
+
+    /* ===== TECH BADGE ===== */
+    .tech-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+    }
+    .tech-badge.teal { background: rgba(14,165,233,0.1); border-color: rgba(14,165,233,0.3); color: var(--teal); }
+    .tech-badge.purple { background: rgba(168,85,247,0.1); border-color: rgba(168,85,247,0.3); color: var(--purple); }
+    .tech-badge.amber { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); color: var(--amber); }
+
+    /* ===== MODULE CHIP ===== */
+    .module-chip {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(26,34,53,0.9);
+      border: 1px solid rgba(30,58,95,0.6);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .module-chip .dot-chip { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* ===== GRID LAYOUTS ===== */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+
+    /* ===== ARCH DIAGRAM ===== */
+    .arch-container {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      max-width: 900px;
+    }
+    .arch-box {
+      flex: 1;
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      border: 2px solid;
+      position: relative;
+    }
+    .arch-box.mobile { border-color: rgba(168,85,247,0.5); background: rgba(168,85,247,0.08); }
+    .arch-box.api    { border-color: rgba(34,197,94,0.5);  background: rgba(34,197,94,0.08);  }
+    .arch-box.web    { border-color: rgba(14,165,233,0.5); background: rgba(14,165,233,0.08); }
+    .arch-arrow {
+      flex: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 0 12px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .arrow-line { font-size: 22px; }
+    .arch-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .arch-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+    .arch-sub { font-size: 11px; color: var(--muted); }
+
+    /* ===== DB MODEL ===== */
+    .db-model {
+      background: rgba(26,34,53,0.9);
+      border: 1px solid rgba(30,58,95,0.7);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 12px;
+    }
+    .db-model-title { font-weight: 700; color: var(--green); margin-bottom: 8px; font-size: 13px; }
+    .db-field { color: var(--muted); display: flex; gap: 6px; }
+    .db-field .type { color: var(--teal); }
+
+    /* ===== FEATURE LIST ===== */
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(30,58,95,0.3);
+    }
+    .feature-item:last-child { border-bottom: none; }
+    .feature-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+    .feature-text h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .feature-text p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ===== PITCH SLIDE ===== */
+    .pitch-stat {
+      text-align: center;
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid;
+    }
+    .pitch-stat.green { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.06); }
+    .pitch-stat.teal  { border-color: rgba(14,165,233,0.4); background: rgba(14,165,233,0.06); }
+    .pitch-stat.purple{ border-color: rgba(168,85,247,0.4); background: rgba(168,85,247,0.06); }
+    .pitch-stat .number { font-size: 2.5rem; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+    .pitch-stat .label  { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+    /* ===== ROUTE CHIP ===== */
+    .route-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(30,58,95,0.5);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+    .method { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+    .method.get  { background: rgba(34,197,94,0.2); color: var(--green); }
+    .method.post { background: rgba(14,165,233,0.2); color: var(--teal); }
+    .method.put  { background: rgba(245,158,11,0.2); color: var(--amber); }
+    .method.patch{ background: rgba(168,85,247,0.2); color: var(--purple); }
+    .method.del  { background: rgba(239,68,68,0.2); color: var(--red); }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-bar { height: 4px; background: rgba(30,58,95,0.5); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+    .progress-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+
+    /* ===== SLIDE 1: COVER ===== */
+    #slide-0 { background: radial-gradient(ellipse at 20% 50%, rgba(34,197,94,0.12) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(14,165,233,0.1) 0%, transparent 50%), var(--bg); }
+    #slide-0 .logo-badge { display: inline-flex; align-items: center; gap: 12px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 50px; padding: 8px 20px; margin-bottom: 32px; font-size: 14px; font-weight: 600; color: var(--green); }
+    #slide-0 .subtitle { font-size: 18px; color: var(--muted); margin-top: 16px; max-width: 600px; line-height: 1.6; }
+    #slide-0 .team-row { display: flex; gap: 16px; margin-top: 40px; }
+    #slide-0 .team-pill { background: rgba(26,34,53,0.8); border: 1px solid rgba(30,58,95,0.5); border-radius: 50px; padding: 6px 16px; font-size: 12px; color: var(--muted); }
+
+    /* ===== SCROLL HINT ===== */
+    .scroll-hint { position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 4px; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+    /* ===== ANIMATE IN ===== */
+    .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .slide.active .fade-up { opacity: 1; transform: translateY(0); }
+    .fade-up:nth-child(1) { transition-delay: 0.05s; }
+    .fade-up:nth-child(2) { transition-delay: 0.15s; }
+    .fade-up:nth-child(3) { transition-delay: 0.25s; }
+    .fade-up:nth-child(4) { transition-delay: 0.35s; }
+    .fade-up:nth-child(5) { transition-delay: 0.45s; }
+    .fade-up:nth-child(6) { transition-delay: 0.55s; }
+
+    /* ===== KEYBOARD HINT ===== */
+    .kbd { display: inline-block; background: rgba(26,34,53,0.9); border: 1px solid rgba(30,58,95,0.7); border-radius: 5px; padding: 2px 7px; font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--muted); }
+
+    /* ===== HIGHLIGHT CODE BLOCK ===== */
+    .code-block {
+      background: #0d1117;
+      border: 1px solid rgba(30,58,95,0.6);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+    .kw  { color: #ff79c6; }
+    .fn  { color: #50fa7b; }
+    .str { color: #f1fa8c; }
+    .cmt { color: #6272a4; }
+    .typ { color: #8be9fd; }
+
+    /* ===== EXTRAS ===== */
+    .divider { height: 1px; background: linear-gradient(to right, transparent, rgba(34,197,94,0.4), transparent); margin: 16px 0; }
+    .pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 50px; font-size: 11px; font-weight: 600; }
+    .pill.green { background: rgba(34,197,94,0.15); color: var(--green); }
+    .pill.teal  { background: rgba(14,165,233,0.15); color: var(--teal); }
+
+    /* ===== SCREEN WIDTHS ===== */
+    @media (max-width: 768px) {
+      .slide { padding: 24px 20px; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: 1fr 1fr; }
+      .arch-container { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="slides-wrapper">
+
+  <!-- ==================== SLIDE 0: CAPA ==================== -->
+  <section class="slide" id="slide-0">
+    <div class="orb" style="width:500px;height:500px;background:rgba(34,197,94,0.08);top:-100px;left:-100px;"></div>
+    <div class="orb" style="width:400px;height:400px;background:rgba(14,165,233,0.07);bottom:-80px;right:-80px;"></div>
+
+    <div class="fade-up logo-badge">
+      <span style="font-size:1.3rem;">🌿</span>
+      EcoFlow
+    </div>
+
+    <h1 class="hero-title fade-up">
+      Gestão Inteligente<br />
+      de <span class="gradient-text">Resíduos</span> em<br />
+      Condomínios
+    </h1>
+
+    <p class="subtitle fade-up">
+      Plataforma completa com <strong>API RESTful</strong>, <strong>Painel Web</strong> e <strong>App Mobile</strong>
+      para engajar moradores na sustentabilidade através de gamificação.
+    </p>
+
+    <div class="team-row fade-up">
+      <span class="team-pill">🏗️ Backend · NestJS + PostgreSQL</span>
+      <span class="team-pill">🖥️ Web · Vue 3 + Vite</span>
+      <span class="team-pill">📱 Mobile · Flutter</span>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Use ← → para navegar</span>
+      <span style="font-size:16px;">↓</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 1: PITCH ==================== -->
+  <section class="slide" id="slide-1" style="background:radial-gradient(ellipse at 70% 30%,rgba(34,197,94,0.1) 0%,transparent 60%),var(--bg);">
+    <div class="orb" style="width:350px;height:350px;background:rgba(34,197,94,0.07);top:50px;right:0;"></div>
+
+    <div class="slide-label fade-up">Temática · Pitch</div>
+
+    <h2 class="section-title fade-up">
+      O Problema <span class="gradient-text">Real</span>
+    </h2>
+
+    <div class="grid-3 fade-up" style="width:100%;max-width:900px;margin-top:28px;">
+      <div class="pitch-stat green">
+        <div class="number gradient-text">79M</div>
+        <div class="label">toneladas de resíduos geradas no Brasil por ano</div>
+      </div>
+      <div class="pitch-stat teal">
+        <div class="number" style="color:var(--teal);">4%</div>
+        <div class="label">apenas da taxa de reciclagem efetiva em condomínios</div>
+      </div>
+      <div class="pitch-stat purple">
+        <div class="number" style="color:var(--purple);">0</div>
+        <div class="label">ferramentas acessíveis de engajamento para síndicos</div>
+      </div>
+    </div>
+
+    <div class="card fade-up" style="margin-top:24px;max-width:860px;width:100%;">
+      <div style="display:flex;align-items:flex-start;gap:20px;">
+        <div style="font-size:2.5rem;flex-shrink:0;">💡</div>
+        <div>
+          <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">Nossa Solução</h3>
+          <p style="color:var(--muted);line-height:1.7;font-size:14px;">
+            O <strong style="color:var(--text);">EcoFlow</strong> transforma descarte de resíduos em uma experiência gamificada.
+            Moradores escaneiam QR Codes nos ecopoints do condomínio, acumulam pontos por tipo de material reciclado
+            e trocam por recompensas reais — enquanto o síndico acompanha tudo em tempo real pelo painel web.
+          </p>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;">
+        <span>📱 <strong>App para moradores</strong> — escanear, pontuar, resgatar</span>
+        <span>🖥️ <strong>Painel para síndicos</strong> — gerenciar, aprovar, analisar</span>
+        <span>🔌 <strong>API robusta</strong> — segura, documentada, escalável</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 2: ARQUITETURA ==================== -->
+  <section class="slide" id="slide-2" style="background:var(--bg);">
+
+    <div class="slide-label fade-up">Arquitetura Global do Sistema</div>
+    <h2 class="section-title fade-up">Como o <span class="gradient-text">EcoFlow</span> funciona</h2>
+
+    <div class="arch-container fade-up" style="margin-top:32px;">
+      <!-- MOBILE -->
+      <div class="arch-box mobile" style="flex:1.1;">
+        <div class="arch-icon">📱</div>
+        <div class="arch-title" style="color:var(--purple);">App Mobile</div>
+        <div class="arch-sub" style="margin-bottom:12px;">Flutter (Dart)</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="module-chip"><span class="dot-chip" style="background:var(--purple);"></span>Provider (State)</div>
+          <div class="module-chip"><span class="dot-chip" style="background:var(--purple);"></span>Dio (HTTP)</div>
+          <div class="module-chip"><span class="dot-chip" style="background:var(--purple);"></span>Secure Storage</div>
+          <div class="module-chip"><span class="dot-chip" style="background:var(--purple);"></span>QR Scanner</div>
+        </div>
+      </div>
+
+      <!-- ARROW 1 -->
+      <div class="arch-arrow">
+        <span style="font-size:11px;color:var(--green);">REST + JWT</span>
+        <span class="arrow-line">⇄</span>
+        <span style="font-size:10px;color:var(--muted);">HTTPS</span>
+      </div>
+
+      <!-- API -->
+      <div class="arch-box api" style="flex:1.3;">
+        <div class="arch-icon">⚙️</div>
+        <div class="arch-title" style="color:var(--green);">Backend API</div>
+        <div class="arch-sub" style="margin-bottom:12px;">NestJS · TypeScript</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="module-chip"><span class="dot-chip" style="background:var(--green);"></span>10 módulos REST</div>
+          <div class="module-chip"><span class="dot-chip" style="background:var(--green);"></span>Prisma ORM</div>
+          <div class="module-chip"><span class="dot-chip" style="background:var(--green);"></span>JWT · Bcrypt</div>
+          <div class="module-chip"><span class="dot-chip" style="background:var(--green);"></span>Swagger Docs</div>
+        </div>
+        <div class="divider"></div>
+        <div style="text-align:center;">
+          <div style="font-size:1.5rem;">🐘</div>
+          <div style="font-size:12px;color:var(--muted);">PostgreSQL</div>
+          <div style="font-size:10px;color:rgba(148,163,184,0.5);">14 modelos · 7 enums</div>
+        </div>
+      </div>
+
+      <!-- ARROW 2 -->
+      <div class="arch-arrow">
+        <span style="font-size:11px;color:var(--teal);">REST + JWT</span>
+        <span class="arrow-line">⇄</span>
+        <span style="font-size:10px;color:var(--muted);">HTTPS</span>
+      </div>
+
+      <!-- WEB -->
+      <div class="arch-box web" style="flex:1.1;">
+        <div class="arch-icon">🖥️</div>
+        <div class="arch-title" style="color:var(--teal);">Painel Web</div>
+        <div class="arch-sub" style="margin-bottom:12px;">Vue 3 + Vite</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="module-chip"><span class="dot-chip" style="background:var(--teal);"></span>Vue Router</div>
+          <div class="module-chip"><span class="dot-chip" style="background:var(--teal);"></span>Axios</div>
+          <div class="module-chip"><span class="dot-chip" style="background:var(--teal);"></span>Chart.js</div>
+          <div class="module-chip"><span class="dot-chip" style="background:var(--teal);"></span>QRCode.js</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-up" style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <span class="pill green">🔐 Autenticação JWT stateless</span>
+      <span class="pill teal">📦 Deploy via Docker + Dockerfile</span>
+      <span class="pill green">🌐 CORS configurado</span>
+      <span class="pill teal">✅ Validação global com class-validator</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 3: BACKEND ==================== -->
+  <section class="slide" id="slide-3" style="background:radial-gradient(ellipse at 30% 70%,rgba(34,197,94,0.08) 0%,transparent 60%),var(--bg);">
+
+    <div class="slide-label fade-up">Backend</div>
+    <h2 class="section-title fade-up">
+      EcoFlow <span class="gradient-text">API</span>
+      <span style="font-size:1rem;font-weight:400;color:var(--muted);margin-left:12px;">NestJS + PostgreSQL</span>
+    </h2>
+
+    <div class="grid-2 fade-up" style="width:100%;max-width:940px;margin-top:24px;align-items:start;">
+      <!-- MÓDULOS -->
+      <div>
+        <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--green);margin-bottom:12px;">Módulos da API</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="route-chip"><span class="method get">GET</span><span class="method post">POST</span> <code>/api/auth</code> <span style="color:var(--muted);font-size:11px;">JWT · Bcrypt</span></div>
+          <div class="route-chip"><span class="method get">GET</span><span class="method post">POST</span> <code>/api/condominios</code></div>
+          <div class="route-chip"><span class="method get">GET</span><span class="method post">POST</span> <code>/api/apartamentos</code></div>
+          <div class="route-chip"><span class="method get">GET</span><span class="method post">POST</span> <code>/api/moradores</code></div>
+          <div class="route-chip"><span class="method get">GET</span><span class="method post">POST</span> <code>/api/ecopoints</code> <span style="color:var(--muted);font-size:11px;">QR Code</span></div>
+          <div class="route-chip"><span class="method get">GET</span><span class="method post">POST</span><span class="method patch">PATCH</span> <code>/api/descartes</code></div>
+          <div class="route-chip"><span class="method get">GET</span><span class="method post">POST</span> <code>/api/recompensas</code></div>
+          <div class="route-chip"><span class="method get">GET</span> <code>/api/dashboard</code></div>
+          <div class="route-chip"><span class="method get">GET</span> <code>/api/ranking</code></div>
+          <div class="route-chip"><span class="method get">GET</span> <code>/api/categorias-material</code></div>
+        </div>
+      </div>
+
+      <!-- DIFERENCIAIS + TECNOLOGIAS -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card card-sm">
+          <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--green);margin-bottom:10px;">Tecnologias</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <span class="tech-badge">NestJS 11</span>
+            <span class="tech-badge teal">TypeScript</span>
+            <span class="tech-badge">Prisma ORM 7</span>
+            <span class="tech-badge teal">PostgreSQL</span>
+            <span class="tech-badge amber">JWT + Passport</span>
+            <span class="tech-badge purple">Swagger / OpenAPI</span>
+            <span class="tech-badge">Bcrypt</span>
+            <span class="tech-badge teal">QRCode.js</span>
+            <span class="tech-badge amber">Docker</span>
+            <span class="tech-badge">UUID</span>
+          </div>
+        </div>
+
+        <div class="card card-sm">
+          <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--teal);margin-bottom:10px;">Diferenciais Técnicos</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="feature-item" style="padding:8px 0;">
+              <span class="feature-icon">📖</span>
+              <div class="feature-text"><h4>Swagger interativo</h4><p>Documentação em <code>/api/docs</code> com autenticação persistente</p></div>
+            </div>
+            <div class="feature-item" style="padding:8px 0;">
+              <span class="feature-icon">🔑</span>
+              <div class="feature-text"><h4>Dois perfis de usuário</h4><p>SINDICO e ADMIN com roles distintas via JWT</p></div>
+            </div>
+            <div class="feature-item" style="padding:8px 0;">
+              <span class="feature-icon">📸</span>
+              <div class="feature-text"><h4>Upload de fotos</h4><p>RegistroDescarte armazena URLs de fotos para validação</p></div>
+            </div>
+            <div class="feature-item" style="padding:8px 0;">
+              <span class="feature-icon">🌱</span>
+              <div class="feature-text"><h4>Seed & Migrations</h4><p>Banco populado com dados reais via <code>npm run seed</code></p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 4: BANCO DE DADOS ==================== -->
+  <section class="slide" id="slide-4" style="background:var(--bg);">
+
+    <div class="slide-label fade-up">Backend · Banco de Dados</div>
+    <h2 class="section-title fade-up">Modelo de <span class="gradient-text">Dados</span></h2>
+
+    <div class="fade-up" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100%;max-width:960px;margin-top:20px;">
+      <div class="db-model">
+        <div class="db-model-title">🏢 Condominio</div>
+        <div class="db-field"><span class="type">String</span> id (UUID)</div>
+        <div class="db-field"><span class="type">String</span> nome</div>
+        <div class="db-field"><span class="type">Decimal</span> metaMensalKg</div>
+      </div>
+      <div class="db-model">
+        <div class="db-model-title">🏠 Apartamento</div>
+        <div class="db-field"><span class="type">String</span> id</div>
+        <div class="db-field"><span class="type">String</span> numero / bloco</div>
+        <div class="db-field"><span class="type">Enum</span> status</div>
+      </div>
+      <div class="db-model">
+        <div class="db-model-title">👤 Morador</div>
+        <div class="db-field"><span class="type">String</span> nome, email</div>
+        <div class="db-field"><span class="type">Int</span> pontosTotal</div>
+        <div class="db-field"><span class="type">Int</span> nivelAtual</div>
+      </div>
+      <div class="db-model">
+        <div class="db-model-title">📍 Ecopoint</div>
+        <div class="db-field"><span class="type">String</span> descricao</div>
+        <div class="db-field"><span class="type">String</span> localizacao</div>
+        <div class="db-field"><span class="type">String</span> qrCodeHash</div>
+      </div>
+      <div class="db-model">
+        <div class="db-model-title">♻️ RegistroDescarte</div>
+        <div class="db-field"><span class="type">Decimal</span> pesoKg</div>
+        <div class="db-field"><span class="type">Int</span> pontosGerados</div>
+        <div class="db-field"><span class="type">Enum</span> PENDENTE/APROVADO</div>
+      </div>
+      <div class="db-model">
+        <div class="db-model-title">🎁 Recompensa</div>
+        <div class="db-field"><span class="type">Int</span> custoPontos</div>
+        <div class="db-field"><span class="type">Enum</span> tipo</div>
+        <div class="db-field"><span class="type">Int</span> qtdDisponivel</div>
+      </div>
+      <div class="db-model">
+        <div class="db-model-title">🏆 RankingMensal</div>
+        <div class="db-field"><span class="type">Int</span> mes / ano</div>
+        <div class="db-field"><span class="type">Decimal</span> totalKg</div>
+        <div class="db-field"><span class="type">Int</span> posicao</div>
+      </div>
+      <div class="db-model">
+        <div class="db-model-title">📦 CategoriaMaterial</div>
+        <div class="db-field">Papel · Plástico</div>
+        <div class="db-field">Vidro · Metal</div>
+        <div class="db-field"><span class="type">Int</span> pontosPorKg</div>
+      </div>
+    </div>
+
+    <div class="fade-up" style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <span class="pill green">14 modelos no schema</span>
+      <span class="pill teal">7 enums de status</span>
+      <span class="pill green">Relações 1:N e N:N completas</span>
+      <span class="pill teal">Índices e constraints via Prisma</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 5: WEB ==================== -->
+  <section class="slide" id="slide-5" style="background:radial-gradient(ellipse at 80% 20%,rgba(14,165,233,0.1) 0%,transparent 60%),var(--bg);">
+
+    <div class="slide-label fade-up">Projeto Web</div>
+    <h2 class="section-title fade-up">
+      Painel <span style="background:linear-gradient(135deg,#0ea5e9,#22c55e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Administrativo</span>
+      <span style="font-size:1rem;font-weight:400;color:var(--muted);margin-left:12px;">Vue 3 + Vite</span>
+    </h2>
+
+    <div class="grid-2 fade-up" style="width:100%;max-width:940px;margin-top:24px;align-items:start;">
+      <!-- VIEWS -->
+      <div class="card">
+        <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--teal);margin-bottom:14px;">Telas / Views</p>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="feature-item" style="padding:6px 0;">
+            <span>📊</span><div class="feature-text"><h4>Resumo (Dashboard)</h4><p>KPIs, progresso de metas, visão geral</p></div>
+          </div>
+          <div class="feature-item" style="padding:6px 0;">
+            <span>📈</span><div class="feature-text"><h4>Estatísticas</h4><p>Gráficos de evolução mensal com Chart.js</p></div>
+          </div>
+          <div class="feature-item" style="padding:6px 0;">
+            <span>🕐</span><div class="feature-text"><h4>Histórico</h4><p>Log completo de descartes registrados</p></div>
+          </div>
+          <div class="feature-item" style="padding:6px 0;">
+            <span>🏆</span><div class="feature-text"><h4>Ranking</h4><p>Podium mensal de apartamentos</p></div>
+          </div>
+          <div class="feature-item" style="padding:6px 0;">
+            <span>🏠</span><div class="feature-text"><h4>Apartamentos & Moradores</h4><p>CRUD completo com filtros</p></div>
+          </div>
+          <div class="feature-item" style="padding:6px 0;">
+            <span>♻️</span><div class="feature-text"><h4>Descartes</h4><p>Aprovação/reprovação com foto</p></div>
+          </div>
+          <div class="feature-item" style="padding:6px 0;">
+            <span>🎁</span><div class="feature-text"><h4>Recompensas</h4><p>Catálogo + validação de cupons</p></div>
+          </div>
+          <div class="feature-item" style="padding:6px 0;">
+            <span>📍</span><div class="feature-text"><h4>Ecopoints</h4><p>Geração de QR Code para cada ponto</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TECNOLOGIAS + DIFERENCIAIS -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card card-sm">
+          <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--teal);margin-bottom:10px;">Stack de tecnologias</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <span class="tech-badge teal">Vue 3 (Composition API)</span>
+            <span class="tech-badge">Vite 8</span>
+            <span class="tech-badge teal">TypeScript 6</span>
+            <span class="tech-badge">Vue Router 5</span>
+            <span class="tech-badge amber">Axios</span>
+            <span class="tech-badge teal">Chart.js 4</span>
+            <span class="tech-badge purple">vue-chartjs</span>
+            <span class="tech-badge">QRCode.js</span>
+            <span class="tech-badge teal">VueUse</span>
+            <span class="tech-badge amber">CSS Vanilla</span>
+          </div>
+        </div>
+
+        <div class="card card-sm">
+          <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--green);margin-bottom:10px;">Diferenciais</p>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="feature-item" style="padding:6px 0;">
+              <span>🔐</span><div class="feature-text"><h4>Guard de rota</h4><p>Proteção automática via localStorage JWT</p></div>
+            </div>
+            <div class="feature-item" style="padding:6px 0;">
+              <span>📊</span><div class="feature-text"><h4>Gráficos interativos</h4><p>Linha, barra e donut para análise de dados</p></div>
+            </div>
+            <div class="feature-item" style="padding:6px 0;">
+              <span>📷</span><div class="feature-text"><h4>Visualizador de fotos</h4><p>Preview de imagens dos descartes para validação</p></div>
+            </div>
+            <div class="feature-item" style="padding:6px 0;">
+              <span>🚀</span><div class="feature-text"><h4>Deploy Vercel</h4><p>vercel.json configurado com SPA redirect</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 6: MOBILE ==================== -->
+  <section class="slide" id="slide-6" style="background:radial-gradient(ellipse at 20% 60%,rgba(168,85,247,0.09) 0%,transparent 60%),var(--bg);">
+
+    <div class="slide-label fade-up">Projeto Mobile</div>
+    <h2 class="section-title fade-up">
+      App <span class="gradient-purple">EcoFlow</span>
+      <span style="font-size:1rem;font-weight:400;color:var(--muted);margin-left:12px;">Flutter + Dart</span>
+    </h2>
+
+    <div class="grid-2 fade-up" style="width:100%;max-width:940px;margin-top:24px;align-items:start;">
+      <!-- TELAS -->
+      <div class="card">
+        <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--purple);margin-bottom:14px;">Telas do App</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div class="card card-sm" style="border-color:rgba(168,85,247,0.3);">
+            <div style="font-size:1.3rem;margin-bottom:4px;">🔑</div>
+            <div style="font-size:13px;font-weight:600;">Login</div>
+            <div style="font-size:11px;color:var(--muted);">Auth JWT seguro</div>
+          </div>
+          <div class="card card-sm" style="border-color:rgba(168,85,247,0.3);">
+            <div style="font-size:1.3rem;margin-bottom:4px;">🏠</div>
+            <div style="font-size:13px;font-weight:600;">Home</div>
+            <div style="font-size:11px;color:var(--muted);">Pontos, nível, descartes</div>
+          </div>
+          <div class="card card-sm" style="border-color:rgba(168,85,247,0.3);">
+            <div style="font-size:1.3rem;margin-bottom:4px;">📷</div>
+            <div style="font-size:13px;font-weight:600;">QR Scanner</div>
+            <div style="font-size:11px;color:var(--muted);">Leitura de ecopoint</div>
+          </div>
+          <div class="card card-sm" style="border-color:rgba(168,85,247,0.3);">
+            <div style="font-size:1.3rem;margin-bottom:4px;">📜</div>
+            <div style="font-size:13px;font-weight:600;">Histórico</div>
+            <div style="font-size:11px;color:var(--muted);">Descartes + cupons</div>
+          </div>
+          <div class="card card-sm" style="border-color:rgba(168,85,247,0.3);">
+            <div style="font-size:1.3rem;margin-bottom:4px;">🏆</div>
+            <div style="font-size:13px;font-weight:600;">Ranking</div>
+            <div style="font-size:11px;color:var(--muted);">Top aptos do mês</div>
+          </div>
+          <div class="card card-sm" style="border-color:rgba(168,85,247,0.3);">
+            <div style="font-size:1.3rem;margin-bottom:4px;">🎫</div>
+            <div style="font-size:13px;font-weight:600;">Cupons</div>
+            <div style="font-size:11px;color:var(--muted);">Resgatar recompensas</div>
+          </div>
+          <div class="card card-sm" style="border-color:rgba(168,85,247,0.3);">
+            <div style="font-size:1.3rem;margin-bottom:4px;">👤</div>
+            <div style="font-size:13px;font-weight:600;">Perfil</div>
+            <div style="font-size:11px;color:var(--muted);">Nível e pontuação</div>
+          </div>
+          <div class="card card-sm" style="border-color:rgba(168,85,247,0.3);">
+            <div style="font-size:1.3rem;margin-bottom:4px;">📊</div>
+            <div style="font-size:13px;font-weight:600;">Dashboard</div>
+            <div style="font-size:11px;color:var(--muted);">Resumo pessoal</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STACK + ARQUITETURA -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card card-sm">
+          <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--purple);margin-bottom:10px;">Stack de tecnologias</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <span class="tech-badge purple">Flutter 3</span>
+            <span class="tech-badge teal">Dart SDK ^3.10</span>
+            <span class="tech-badge purple">Provider</span>
+            <span class="tech-badge">Dio HTTP</span>
+            <span class="tech-badge purple">Secure Storage</span>
+            <span class="tech-badge teal">QR Code Scanner+</span>
+            <span class="tech-badge">Image Picker</span>
+            <span class="tech-badge purple">Flutter Dotenv</span>
+          </div>
+        </div>
+
+        <div class="card card-sm">
+          <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--green);margin-bottom:10px;">Arquitetura Limpa (Clean Arch)</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:90px;font-size:12px;font-weight:600;color:var(--purple);">Presentation</div>
+              <div style="font-size:11px;color:var(--muted);">Pages · Controllers · Widgets</div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:85%;background:var(--purple);"></div></div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:90px;font-size:12px;font-weight:600;color:var(--teal);">Domain</div>
+              <div style="font-size:11px;color:var(--muted);">Repositories (interfaces)</div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:60%;background:var(--teal);"></div></div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:90px;font-size:12px;font-weight:600;color:var(--green);">Data</div>
+              <div style="font-size:11px;color:var(--muted);">DataSources · Models · Repositories</div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:70%;background:var(--green);"></div></div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:90px;font-size:12px;font-weight:600;color:var(--amber);">Core</div>
+              <div style="font-size:11px;color:var(--muted);">Network · Storage · Routes</div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:50%;background:var(--amber);"></div></div>
+          </div>
+        </div>
+
+        <div class="card card-sm">
+          <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--teal);margin-bottom:8px;">Recursos Extras</p>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;">
+            <div>📷 <strong>Captura de foto</strong> via ImagePicker para descartes</div>
+            <div>🔒 <strong>Token salvo com segurança</strong> (Secure Storage)</div>
+            <div>📡 <strong>Interceptor HTTP</strong> no Dio para auth automática</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 7: DIFERENCIAIS / EXTRAS ==================== -->
+  <section class="slide" id="slide-7" style="background:radial-gradient(ellipse at 50% 50%,rgba(34,197,94,0.07) 0%,transparent 70%),var(--bg);">
+
+    <div class="slide-label fade-up">Recursos Extras · Diferencial</div>
+    <h2 class="section-title fade-up">Além do que foi <span class="gradient-text">visto em sala</span></h2>
+
+    <div class="grid-3 fade-up" style="width:100%;max-width:940px;margin-top:28px;">
+      <div class="card" style="border-color:rgba(34,197,94,0.4);">
+        <div style="font-size:2rem;margin-bottom:12px;">📖</div>
+        <h3 style="font-weight:700;margin-bottom:8px;color:var(--green);">Swagger / OpenAPI</h3>
+        <p style="color:var(--muted);font-size:13px;line-height:1.6;">
+          Documentação interativa completa em <code style="color:var(--teal);">/api/docs</code>.
+          Todos os endpoints documentados com schemas, exemplos e autenticação JWT integrada.
+        </p>
+      </div>
+
+      <div class="card" style="border-color:rgba(14,165,233,0.4);">
+        <div style="font-size:2rem;margin-bottom:12px;">🎮</div>
+        <h3 style="font-weight:700;margin-bottom:8px;color:var(--teal);">Gamificação Completa</h3>
+        <p style="color:var(--muted);font-size:13px;line-height:1.6;">
+          Sistema de níveis por pontos acumulados, ranking mensal entre apartamentos, histórico de conquistas
+          e recompensas trocáveis via cupom — tudo integrado ponta a ponta.
+        </p>
+      </div>
+
+      <div class="card" style="border-color:rgba(168,85,247,0.4);">
+        <div style="font-size:2rem;margin-bottom:12px;">📷</div>
+        <h3 style="font-weight:700;margin-bottom:8px;color:var(--purple);">QR Code End-to-End</h3>
+        <p style="color:var(--muted);font-size:13px;line-height:1.6;">
+          Web gera o QR Code do ecopoint (hash único), Mobile escaneia e valida o hash na API,
+          fechando um fluxo completo de rastreabilidade do descarte.
+        </p>
+      </div>
+
+      <div class="card" style="border-color:rgba(245,158,11,0.4);">
+        <div style="font-size:2rem;margin-bottom:12px;">🐳</div>
+        <h3 style="font-weight:700;margin-bottom:8px;color:var(--amber);">Docker & CI Ready</h3>
+        <p style="color:var(--muted);font-size:13px;line-height:1.6;">
+          Dockerfile e docker-compose.yml prontos para deploy. Banco PostgreSQL containerizado.
+          Projeto deployável em qualquer cloud com um único comando.
+        </p>
+      </div>
+
+      <div class="card" style="border-color:rgba(34,197,94,0.4);">
+        <div style="font-size:2rem;margin-bottom:12px;">🔐</div>
+        <h3 style="font-weight:700;margin-bottom:8px;color:var(--green);">Segurança em Camadas</h3>
+        <p style="color:var(--muted);font-size:13px;line-height:1.6;">
+          Senhas com Bcrypt, tokens JWT stateless, roles de acesso, whitelist de campos
+          (ValidationPipe), CORS configurado e armazenamento seguro no mobile.
+        </p>
+      </div>
+
+      <div class="card" style="border-color:rgba(14,165,233,0.4);">
+        <div style="font-size:2rem;margin-bottom:12px;">📊</div>
+        <h3 style="font-weight:700;margin-bottom:8px;color:var(--teal);">Análises & Métricas</h3>
+        <p style="color:var(--muted);font-size:13px;line-height:1.6;">
+          Dashboard com gráficos de linha e barra no Web (Chart.js), metas mensais com status automático
+          (EM_ANDAMENTO / ATINGIDA / NAO_ATINGIDA) e ranking histórico persistido.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 8: FLUXO DE USO ==================== -->
+  <section class="slide" id="slide-8" style="background:var(--bg);">
+
+    <div class="slide-label fade-up">Demonstração</div>
+    <h2 class="section-title fade-up">Fluxo <span class="gradient-text">Completo</span> de Uso</h2>
+
+    <div class="fade-up" style="width:100%;max-width:900px;margin-top:28px;">
+      <div style="display:flex;flex-direction:column;gap:0;">
+
+        <div style="display:flex;gap:0;align-items:stretch;">
+          <div style="display:flex;flex-direction:column;align-items:center;margin-right:20px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:rgba(34,197,94,0.2);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--green);font-size:16px;flex-shrink:0;">1</div>
+            <div style="width:2px;flex:1;background:rgba(34,197,94,0.2);margin:4px 0;"></div>
+          </div>
+          <div class="card" style="flex:1;margin-bottom:12px;">
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span style="font-size:1.5rem;">🏢</span>
+              <div>
+                <strong>Síndico cadastra o condomínio</strong>
+                <p style="font-size:12px;color:var(--muted);">Define metas mensais (kg), cria apartamentos, registra ecopoints e gera QR Codes pelo painel web.</p>
+              </div>
+              <span class="pill teal" style="margin-left:auto;white-space:nowrap;">🖥️ Web</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:0;align-items:stretch;">
+          <div style="display:flex;flex-direction:column;align-items:center;margin-right:20px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:rgba(168,85,247,0.2);border:2px solid var(--purple);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--purple);font-size:16px;flex-shrink:0;">2</div>
+            <div style="width:2px;flex:1;background:rgba(168,85,247,0.2);margin:4px 0;"></div>
+          </div>
+          <div class="card" style="flex:1;margin-bottom:12px;">
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span style="font-size:1.5rem;">📱</span>
+              <div>
+                <strong>Morador faz login no App</strong>
+                <p style="font-size:12px;color:var(--muted);">Autentica via JWT, vê seus pontos e nível, acessa o scanner de QR Code.</p>
+              </div>
+              <span class="pill" style="margin-left:auto;background:rgba(168,85,247,0.15);color:var(--purple);white-space:nowrap;">📱 Mobile</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:0;align-items:stretch;">
+          <div style="display:flex;flex-direction:column;align-items:center;margin-right:20px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:rgba(34,197,94,0.2);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--green);font-size:16px;flex-shrink:0;">3</div>
+            <div style="width:2px;flex:1;background:rgba(34,197,94,0.2);margin:4px 0;"></div>
+          </div>
+          <div class="card" style="flex:1;margin-bottom:12px;">
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span style="font-size:1.5rem;">♻️</span>
+              <div>
+                <strong>Morador escaneia o QR Code do ecopoint</strong>
+                <p style="font-size:12px;color:var(--muted);">Seleciona tipo de material, informa o peso, tira foto — registro enviado à API com status PENDENTE.</p>
+              </div>
+              <span class="pill" style="margin-left:auto;background:rgba(168,85,247,0.15);color:var(--purple);white-space:nowrap;">📱 Mobile</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:0;align-items:stretch;">
+          <div style="display:flex;flex-direction:column;align-items:center;margin-right:20px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:rgba(14,165,233,0.2);border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--teal);font-size:16px;flex-shrink:0;">4</div>
+            <div style="width:2px;flex:1;background:rgba(14,165,233,0.2);margin:4px 0;"></div>
+          </div>
+          <div class="card" style="flex:1;margin-bottom:12px;">
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span style="font-size:1.5rem;">✅</span>
+              <div>
+                <strong>Síndico valida o descarte</strong>
+                <p style="font-size:12px;color:var(--muted);">Vê a foto, aprova ou nega — API atribui pontos ao morador e atualiza o ranking.</p>
+              </div>
+              <span class="pill teal" style="margin-left:auto;white-space:nowrap;">🖥️ Web</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:0;align-items:stretch;">
+          <div style="display:flex;flex-direction:column;align-items:center;margin-right:20px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:rgba(245,158,11,0.2);border:2px solid var(--amber);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--amber);font-size:16px;flex-shrink:0;">5</div>
+          </div>
+          <div class="card" style="flex:1;">
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span style="font-size:1.5rem;">🎁</span>
+              <div>
+                <strong>Morador resgata recompensas</strong>
+                <p style="font-size:12px;color:var(--muted);">Troca pontos por cupons no App — síndico valida o cupom pelo painel web.</p>
+              </div>
+              <div style="margin-left:auto;display:flex;gap:6px;flex-shrink:0;">
+                <span class="pill" style="background:rgba(168,85,247,0.15);color:var(--purple);">📱</span>
+                <span class="pill teal">🖥️</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 9: ENCERRAMENTO ==================== -->
+  <section class="slide" id="slide-9" style="background:radial-gradient(ellipse at 50% 50%,rgba(34,197,94,0.12) 0%,transparent 65%),var(--bg);text-align:center;">
+    <div class="orb" style="width:600px;height:600px;background:rgba(34,197,94,0.06);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+
+    <div class="fade-up" style="font-size:4rem;margin-bottom:24px;">🌿</div>
+
+    <h2 class="section-title fade-up" style="font-size:clamp(2.5rem,5vw,4.5rem);">
+      <span class="gradient-text">EcoFlow</span>
+    </h2>
+
+    <p class="fade-up" style="font-size:1.3rem;color:var(--muted);margin-top:12px;max-width:600px;line-height:1.6;">
+      Transformando <strong style="color:var(--text);">descarte em recompensa</strong>,<br />
+      condomínios em <strong style="color:var(--text);">comunidades sustentáveis</strong>.
+    </p>
+
+    <div class="fade-up" style="margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:700px;">
+      <div style="text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:var(--green);">3</div>
+        <div style="font-size:12px;color:var(--muted);">projetos integrados</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:var(--teal);">10+</div>
+        <div style="font-size:12px;color:var(--muted);">módulos de API</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:var(--purple);">14</div>
+        <div style="font-size:12px;color:var(--muted);">modelos de banco</div>
+      </div>
+    </div>
+
+    <div class="fade-up" style="margin-top:40px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <div class="card card-sm" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;">
+        <span>🔌</span> <code style="color:var(--green);">localhost:3000/api/docs</code>
+      </div>
+      <div class="card card-sm" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;">
+        <span>🖥️</span> <code style="color:var(--teal);">localhost:5173</code>
+      </div>
+    </div>
+
+    <p class="fade-up" style="margin-top:48px;font-size:13px;color:rgba(148,163,184,0.5);">
+      Obrigado! · Perguntas? 🙌
+    </p>
+  </section>
+
+</div>
+
+<!-- ===== NAV BOTTOM ===== -->
+<nav id="nav">
+  <button class="nav-btn" id="btn-prev" title="Anterior (←)">◀</button>
+  <div class="dot-nav" id="dot-nav"></div>
+  <span id="slide-counter">1 / 10</span>
+  <button class="nav-btn" id="btn-next" title="Próximo (→)">▶</button>
+</nav>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const wrapper = document.getElementById('slides-wrapper');
+  const counter = document.getElementById('slide-counter');
+  const dotNav  = document.getElementById('dot-nav');
+  let current = 0;
+  const total = slides.length;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotNav.appendChild(d);
+  });
+
+  function goTo(n) {
+    current = Math.max(0, Math.min(total - 1, n));
+    wrapper.style.transform = `translateX(-${current * 100}vw)`;
+    counter.textContent = `${current + 1} / ${total}`;
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    // Trigger animations
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+  }
+
+  document.getElementById('btn-prev').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('btn-next').addEventListener('click', () => goTo(current + 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+    if (e.key === 'Home') goTo(0);
+    if (e.key === 'End')  goTo(total - 1);
+  });
+
+  // Touch/swipe
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) goTo(dx < 0 ? current + 1 : current - 1);
+  });
+
+  // Initial state
+  goTo(0);
+</script>
+</body>
+</html>
