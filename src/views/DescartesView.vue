@@ -71,6 +71,7 @@
             <div class="card-meta text-muted">
               <span>📅 {{ fmtDate(d.dataColeta) }}</span>
               <span>⚖️ {{ Number(d.pesoKg).toFixed(2) }} kg</span>
+              <span v-if="d.ecopoint" class="obs">📍 {{ d.ecopoint.descricao }}</span>
               <span v-if="d.observacoes" class="obs">• {{ d.observacoes }}</span>
             </div>
           </div>
@@ -140,6 +141,10 @@
               <div class="info-item full" v-if="selected.observacoes">
                 <span class="info-lbl">Observações do morador</span>
                 <span class="info-val">{{ selected.observacoes }}</span>
+              </div>
+              <div class="info-item full" v-if="selected.ecopoint">
+                <span class="info-lbl">Local de Descarte (EcoPoint)</span>
+                <span class="info-val">{{ selected.ecopoint.descricao }} - {{ selected.ecopoint.localizacao }}</span>
               </div>
             </div>
 
